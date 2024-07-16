@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <OutputType>Library</OutputType>
+
+    <RootNamespace>Training.Common.Hexagon.AspNetCore</RootNamespace>
+
+    <LangVersion>11.0</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    
+    <PackageId>Training.Common.Hexagon.AspNetCore</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Przemek Gogacz</Authors>
+    <Company>SGGW</Company>
+    <Description>Common hexagon pattern infrastructure bindings for AspNetCore.</Description>
+
+    <CodeAnalysisRuleSet>library-v1.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>    <!-- Framework references -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+   <ItemGroup>   <!-- NuGet references -->
+    <PackageReference Include="Training.Common.Hexagon.Core" Version="0.1.0" />
+  </ItemGroup>
+</Project>

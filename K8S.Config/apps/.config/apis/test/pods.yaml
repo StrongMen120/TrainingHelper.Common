@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plans-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plans-api
+  template:
+    metadata:
+      labels:
+        app: plans-api
+    spec:
+      imagePullSecrets:
+        - name: registry-trainin
+      containers:
+        - name: plans-api
+          image: traininghelper.azurecr.io/traininghelperrepo/training-helper/apis/plans:0.3.0
+          volumeMounts:
+            - name: plans-api-cm
+              mountPath: "/app/appsettings.Production.json"
+              subPath: appsettings.Production.json
+              readOnly: true
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+      volumes:
+        - name: plans-api-cm
+          configMap:
+            name: plans-api-cm

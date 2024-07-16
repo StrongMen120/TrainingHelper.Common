@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-api
+  template:
+    metadata:
+      labels:
+        app: users-api
+    spec:
+      imagePullSecrets:
+        - name: registry-trainin
+      containers:
+        - name: users-api
+          image: traininghelper.azurecr.io/traininghelperrepo/training-helper/apis/users:0.3.0
+          volumeMounts:
+            - name: users-api-cm
+              mountPath: "/app/appsettings.Production.json"
+              subPath: appsettings.Production.json
+              readOnly: true
+          resources:
+            requests:
+              cpu: "10m" # 0.1 CPU (100 millicores)
+              memory: "32M" # 256 MiB (megabajtów)
+            limits:
+              cpu: "500m" # 0.5 CPU (500 millicores)
+              memory: "512M" # 512 MiB (megabajtów)
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: users-api-cm
+          configMap:
+            name: users-api-cm

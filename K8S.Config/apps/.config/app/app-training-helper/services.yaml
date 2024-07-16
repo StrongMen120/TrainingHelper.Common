@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: training-helper-app
+  name: training-helper-app
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: training-helper-app
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: training-helper-app-ingress
+spec:
+  rules:
+    - host: traininghelperk8s-dns-hl4gzkfw.hcp.eastus.azmk8s.io # Twój wirtualny host
+      http:
+        paths:
+          - path: / # Ścieżka URI
+            pathType: Prefix
+            backend:
+              service:
+                name: training-helper-app # Nazwa Twojej usługi API
+                port:
+                  number: 80 # Port usługi

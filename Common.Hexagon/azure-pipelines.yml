@@ -1,0 +1,74 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: "Release"
+
+stages:
+  - stage: init
+    displayName: "Version validation"
+    lockBehavior: sequential
+    jobs:
+      - job: version
+        displayName: Version calculation
+        dependsOn: []
+        steps:
+          - checkout: self
+            persistCredentials: true
+            displayName: Checkout code
+
+          - task: PowerShell@2
+            displayName: Fetch tags
+            inputs:
+              targetType: "inline"
+              script: git fetch --all --prune-tags --tags -v
+
+  - stage: build
+    dependsOn: init
+    displayName: "Build"
+    jobs:
+      - job: build
+        displayName: Build
+        steps:
+          - task: UseDotNet@2
+            displayName: Ensure .NET 7.0
+            inputs:
+              packageType: "sdk"
+              version: "7.0.x"
+
+          - task: DotNetCoreCLI@2
+            displayName: Restore projects
+            inputs:
+              command: "restore"
+              projects: "src/**/*.csproj"
+              feedsToUse: "select"
+              vstsFeed: "TrainerHelper/TrainerFeed"
+
+          - task: DotNetCoreCLI@2
+            displayName: Build projects
+            inputs:
+              command: "build"
+              projects: "src/**/*.csproj"
+              arguments: "--no-restore"
+
+  - stage: publish
+    dependsOn:
+      - init
+      - build
+    displayName: "Publish"
+    jobs:
+      - job: publish
+        displayName: Publish
+        steps:
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+              ArtifactName: "MyApp"

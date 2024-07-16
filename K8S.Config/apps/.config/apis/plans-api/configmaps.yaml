@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: plans-api-cm
+  labels:
+    app: plans-api
+data:
+  appsettings.Production.json: |
+    {
+      "Databases": {
+        "Trainings": {
+          "ConnectionString": "User ID=PrzemekTH@traininghelper-postgresql;Password=Przemek123;Host=traininghelper-postgresql.postgres.database.azure.com;Port=5432;Database=przemo;Pooling=true;Include Error Detail=true",
+          "DefaultDatabase": "postgres",
+          "EnableAutomaticMigration": true,
+          "PostgresApiVersion": "12.3"
+        }
+      },
+      "ExternalService": {
+        "users-api": {
+          "BasePath": "http://localhost:5002",
+          "Timeout": "00:01:00"
+        },
+        "AuthenticationApi": "https://dev-l0ei1c70lfx8pmh1.us.auth0.com/",
+        "S3Storage": {
+          "BucketName": "przemek-test",
+          "AccessKey": "AKIAIOSFODNN7EXAMPLE",
+          "AccessKeySecret": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "S3LoginRoot": "http://localhost:9444"
+        }
+      }
+    }

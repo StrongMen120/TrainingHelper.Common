@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-api-cm
+  labels:
+    app: users-api
+data:
+  appsettings.Production.json: |
+    {
+      "Database": {
+        "Users": {
+          "ConnectionString": "User ID=PrzemekTH@traininghelper-postgresql;Password=Przemek123;Host=traininghelper-postgresql.postgres.database.azure.com;Port=5432;Database=przemo;Pooling=true;Include Error Detail=true",
+          "DefaultDatabase": "postgres",
+          "EnableAutomaticMigration": true,
+          "PostgresApiVersion": "12.3"
+        }
+      }
+    }

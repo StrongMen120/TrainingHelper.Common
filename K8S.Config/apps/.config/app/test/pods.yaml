@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: training-helper-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: training-helper-app
+  template:
+    metadata:
+      labels:
+        app: training-helper-app
+    spec:
+      imagePullSecrets:
+        - name: registry-trainin
+      containers:
+        - name: training-helper-app
+          image: traininghelper.azurecr.io/traininghelperrepo/training-helper/apps/training-helper-portal:0.2.0
+          volumeMounts:
+            - name: training-helper-app-runtime-config
+              mountPath: "/usr/share/nginx/html/runtime-config.js"
+              subPath: runtime-config.js
+              # readOnly: true
+            - name: training-helper-app-runtime-config
+              mountPath: "/usr/share/nginx/html/config.json"
+              subPath: config.json
+              readOnly: true
+            - name: training-helper-app-runtime-config
+              mountPath: "/usr/share/nginx/html/static/config.json"
+              subPath: config.json
+              readOnly: true
+          resources:
+            requests:
+              memory: "11M"
+              cpu: "10m"
+            limits:
+              memory: "64M"
+              cpu: "500m"
+          ports:
+            - containerPort: 80
+      volumes:
+        - name: training-helper-app-runtime-config
+          configMap:
+            name: training-helper-app-cm
